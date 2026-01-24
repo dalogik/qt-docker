@@ -1,5 +1,5 @@
-ARG QT_VERSION
-ARG MINGW_VERSION
+ARG QT_VERSION=6.10.0
+ARG MINGW_VERSION=1310
 
 FROM ubuntu:24.04 AS build-img
 ARG QT_VERSION
@@ -31,11 +31,20 @@ ARG QT_VERSION
 ARG MINGW_VERSION
 
 LABEL org.opencontainers.image.title="Qt MinGW Builder" \
-      org.opencontainers.image.description="Ubuntu-based builder with Wine, CMake, and Qt ${QT_VERSION}" \
+      org.opencontainers.image.description="Ubuntu-based builder with Qt ${QT_VERSION} and MinGW ${MINGW_VERSION}" \
       org.opencontainers.image.authors="Dmitriy Alexandrov <d.alexandrov@dalogik.com>" \
       org.opencontainers.image.source="https://github.com/dalogik/qt-docker" \
       org.opencontainers.image.version="${QT_VERSION}"
 
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Download standard license texts
+ADD https://www.gnu.org/licenses/lgpl-3.0.txt /usr/share/licenses/qt/LGPLv3.txt
+ADD https://www.gnu.org/licenses/gpl-3.0.txt /usr/share/licenses/qt/GPLv3.txt
+
+COPY --chmod=444 <<\EOF /usr/share/licenses/qt/README
+This image contains Qt. Source available at https://download.qt.io
+EOF
 
 # Copy installed applications
 COPY --from=build-img /opt /opt
@@ -43,30 +52,24 @@ COPY --from=build-img /opt /opt
 # Add CMake wrapper
 COPY --chmod=755 <<\EOF /usr/bin/cmake
 #!/bin/sh
-
 # Add to Wine PATH all bin directories
 export WINEPATH="$(find /opt -name bin -type d | sed 's/^/Z:/' | paste -sd ";" -);Z:/opt/Tools/Ninja"
-
 wine /opt/Tools/CMake_64/bin/cmake.exe "\$@"
 EOF
 
 # Add qmake wrapper
 COPY --chmod=755 <<\EOF /usr/bin/qmake 
 #!/bin/sh
-
 # Add to Wine PATH all bin directories
 export WINEPATH="$(find /opt -name bin -type d | sed 's/^/Z:/' | paste -sd ";" -);Z:/opt/Tools/Ninja"
-
 wine /opt/qt/${QT_VERSION}/mingw_64/bin/qmake.exe "$@"
 EOF
 
 # Add mingw32-make wrapper
 COPY --chmod=755 <<\EOF /usr/bin/mingw32-make 
 #!/bin/sh
-
 # Add to Wine PATH all bin directories
 export WINEPATH="$(find /opt -name bin -type d | sed 's/^/Z:/' | paste -sd ";" -);Z:/opt/Tools/Ninja"
-
 wine /opt/Tools/mingw${MINGW_VERSION}_64/bin/mingw32-make.exe "$@"
 EOF
 
@@ -84,3 +87,5 @@ ENV LC_ALL=en_US.UTF-8
 RUN apt-get update && apt-get install -y \
     wine \
     && rm -rf /var/lib/apt/lists/*
+
+ENV WINDEBUG=-all
