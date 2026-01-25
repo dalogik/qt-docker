@@ -55,7 +55,8 @@ COPY --chmod=755 <<\EOF /usr/bin/cmake
 #!/bin/sh
 # Add to Wine PATH all bin directories
 export WINEPATH="$(find /opt -name bin -type d | sed 's/^/Z:/' | paste -sd ";" -);Z:/opt/Tools/Ninja"
-export WINDEBUG=-all
+export WINEDEBUG="-all"
+export WINEPREFIX="/tmp/wine-$(whoami)"
 wine /opt/Tools/CMake_64/bin/cmake.exe "\$@"
 EOF
 
@@ -64,7 +65,8 @@ COPY --chmod=755 <<\EOF /usr/bin/qmake
 #!/bin/sh
 # Add to Wine PATH all bin directories
 export WINEPATH="$(find /opt -name bin -type d | sed 's/^/Z:/' | paste -sd ";" -);Z:/opt/Tools/Ninja"
-export WINDEBUG=-all
+export WINEDEBUG="-all"
+export WINEPREFIX="/tmp/wine-$(whoami)"
 wine /opt/qt/${QT_VERSION}/mingw_64/bin/qmake.exe "\$@"
 EOF
 
@@ -73,7 +75,8 @@ COPY --chmod=755 <<\EOF /usr/bin/mingw32-make
 #!/bin/sh
 # Add to Wine PATH all bin directories
 export WINEPATH="$(find /opt -name bin -type d | sed 's/^/Z:/' | paste -sd ";" -);Z:/opt/Tools/Ninja"
-export WINDEBUG=-all
+export WINEDEBUG="-all"
+export WINEPREFIX="/tmp/wine-$(whoami)"
 wine /opt/Tools/mingw${MINGW_VERSION}_64/bin/mingw32-make.exe "\$@"
 EOF
 
@@ -93,5 +96,3 @@ RUN apt-get update \
     && apt-get install -y --no-install-suggests --no-install-recommends \
     wine \
     && rm -rf /var/lib/apt/lists/*
-
-ENV WINDEBUG=-all
