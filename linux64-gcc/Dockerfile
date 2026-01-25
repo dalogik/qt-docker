@@ -44,7 +44,8 @@ EOF
 COPY --from=build-img /opt /opt
 
 # Install locale
-RUN apt-get update && apt-get install -y \
+RUN apt-get update \
+    && apt-get install -y --no-install-suggests --no-install-recommends \
     locales \
     && rm -rf /var/lib/apt/lists/* \
     && locale-gen en_US.UTF-8
@@ -57,7 +58,8 @@ ENV LC_ALL=en_US.UTF-8
 # build-essential and libgl1-mesa-dev are required for Qt 6
 # https://doc.qt.io/qt-6/linux.html
 # https://doc.qt.io/qt-6/linux-requirements.html
-RUN apt-get update && apt-get install -y \
+RUN apt-get update \
+    && apt-get install -y --no-install-suggests --no-install-recommends \
     build-essential libgl1-mesa-dev \
     cmake ninja-build \
     libfontconfig1-dev \
