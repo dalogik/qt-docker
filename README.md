@@ -5,9 +5,53 @@ Qt releases. These images are designed to build Qt applications out-of-the-box
 without requiring further configuration.
 
 Currently, this repository provides a build environment for Windows OS x64
-using the MinGW compiler.
+using the MinGW compiler and a build environment for Linux OS x64 using gcc
+compiler.
 
-## MinGW Image
+## Linux GCC Image
+
+The MinGW image includes an official Qt release with all available plugins.
+
+### Download the Image
+
+You can download pre-built images from Docker Hub:
+[hub.docker.com/r/dalogik/qt-docker](https://hub.docker.com/r/dalogik/qt-docker)
+
+Look for tags in the format: `qtXX-linux64-gcc-XXXX`.
+
+### Build the Image Locally
+
+If you prefer to build the Docker image yourself, you must specify the Qt
+version.
+
+**Note:** [aqtinstall](https://aqtinstall.readthedocs.io/en/latest/index.html)
+is used to download tools, so the MinGW version must match the format used by
+`aqt`.
+
+Run the following command from the `linux64-gcc` directory:
+
+```bash
+docker buildx build \
+  --build-arg QT_VERSION=6.10.0 \
+  . -t <desired tag>
+```
+
+### Compile an Application
+
+The Docker image includes a Wine emulator to run native Windows build tools.
+To simplify the process, wrappers around `CMake`, `QMake`, and `mingw32-make`
+are provided.
+
+To compile a CMake project, mount your source directory to the container and
+run the build commands:
+
+```bash
+# Example: Running the build inside the container
+cmake -G Ninja -B <build_dir> <source_dir>
+cmake --build <build_dir>
+```
+
+## Windows MinGW Image
 
 The MinGW image includes an official Qt release with all available plugins.
 
@@ -27,7 +71,7 @@ version and the corresponding MinGW version.
 is used to download tools, so the MinGW version must match the format used by
 `aqt`.
 
-Run the following command from the `mingw` directory:
+Run the following command from the `win64-mingw` directory:
 
 ```bash
 docker buildx build \
@@ -35,6 +79,7 @@ docker buildx build \
   --build-arg MINGW_VERSION=1310 \
   . -t <desired tag>
 ```
+
 ### Compile an Application
 
 The Docker image includes a Wine emulator to run native Windows build tools.
@@ -52,6 +97,7 @@ run the build commands:
 cmake -G Ninja -B <build_dir> <source_dir>
 cmake --build <build_dir>
 ```
+
 # Licensing
 
 The code in this repository (Dockerfile, shell scripts, etc.) is licensed under
