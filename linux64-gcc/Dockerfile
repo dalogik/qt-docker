@@ -32,10 +32,7 @@ LABEL org.opencontainers.image.title="Qt GCC Builder" \
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Download standard license texts
-ADD https://www.gnu.org/licenses/lgpl-3.0.txt /usr/share/licenses/qt/LGPLv3.txt
-ADD https://www.gnu.org/licenses/gpl-3.0.txt /usr/share/licenses/qt/GPLv3.txt
-
+# Add README with a link to qt
 COPY --chmod=444 <<\EOF /usr/share/licenses/qt/README
 This image contains Qt. Source available at https://download.qt.io
 EOF
