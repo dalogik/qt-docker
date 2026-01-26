@@ -93,3 +93,10 @@ RUN apt-get update \
     && apt-get install -y --no-install-suggests --no-install-recommends \
     wine \
     && rm -rf /var/lib/apt/lists/*
+
+# Install usefull for CI packages
+RUN apt-get update \
+    && apt-get install -y --no-install-suggests --no-install-recommends \
+    ca-certificates git git-lfs \
+    && rm -rf /var/lib/apt/lists/* \
+    && locale-gen en_US.UTF-8

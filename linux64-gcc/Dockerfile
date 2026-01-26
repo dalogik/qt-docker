@@ -90,3 +90,10 @@ RUN apt-get update \
 ENV PATH="/opt/qt/${QT_VERSION}/gcc_64/bin:${PATH}"
 # Add Qt path for all users
 RUN sed -i "s|^PATH=\"|PATH=\"/opt/qt/${QT_VERSION}/gcc_64/bin:|" /etc/environment
+
+# Install usefull for CI packages
+RUN apt-get update \
+    && apt-get install -y --no-install-suggests --no-install-recommends \
+    ca-certificates git git-lfs \
+    && rm -rf /var/lib/apt/lists/* \
+    && locale-gen en_US.UTF-8
