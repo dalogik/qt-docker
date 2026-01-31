@@ -52,27 +52,57 @@ COPY --chmod=755 <<\EOF /usr/bin/cmake
 #!/bin/sh
 # Add to Wine PATH all bin directories
 export WINEPATH="$(find /opt -name bin -type d | sed 's/^/Z:/' | paste -sd ";" -);Z:/opt/Tools/Ninja"
+# Disable Wine debug
 export WINEDEBUG="-all"
+# Use tmp directory for Wine files
 export WINEPREFIX="/tmp/wine-$(whoami)"
 wine /opt/Tools/CMake_64/bin/cmake.exe "\$@"
 EOF
 
 # Add qmake wrapper
-COPY --chmod=755 <<\EOF /usr/bin/qmake 
+COPY --chmod=755 <<\EOF /usr/bin/qmake
 #!/bin/sh
 # Add to Wine PATH all bin directories
 export WINEPATH="$(find /opt -name bin -type d | sed 's/^/Z:/' | paste -sd ";" -);Z:/opt/Tools/Ninja"
+# Disable Wine debug
 export WINEDEBUG="-all"
+# Use tmp directory for Wine files
 export WINEPREFIX="/tmp/wine-$(whoami)"
 wine /opt/qt/${QT_VERSION}/mingw_64/bin/qmake.exe "\$@"
 EOF
 
-# Add mingw32-make wrapper
-COPY --chmod=755 <<\EOF /usr/bin/mingw32-make 
+# Add qt-cmake wrapper
+COPY --chmod=755 <<\EOF /usr/bin/qt-cmake
 #!/bin/sh
 # Add to Wine PATH all bin directories
 export WINEPATH="$(find /opt -name bin -type d | sed 's/^/Z:/' | paste -sd ";" -);Z:/opt/Tools/Ninja"
+# Disable Wine debug
 export WINEDEBUG="-all"
+# Use tmp directory for Wine files
+export WINEPREFIX="/tmp/wine-$(whoami)"
+wine /opt/qt/${QT_VERSION}/mingw_64/bin/qt-cmake.exe "\$@"
+EOF
+
+# Add windeployqt wrapper
+COPY --chmod=755 <<\EOF /usr/bin/windeployqt
+#!/bin/sh
+# Add to Wine PATH all bin directories
+export WINEPATH="$(find /opt -name bin -type d | sed 's/^/Z:/' | paste -sd ";" -);Z:/opt/Tools/Ninja"
+# Disable Wine debug
+export WINEDEBUG="-all"
+# Use tmp directory for Wine files
+export WINEPREFIX="/tmp/wine-$(whoami)"
+wine /opt/qt/${QT_VERSION}/mingw_64/bin/windeployqt.exe "\$@"
+EOF
+
+# Add mingw32-make wrapper
+COPY --chmod=755 <<\EOF /usr/bin/mingw32-make
+#!/bin/sh
+# Add to Wine PATH all bin directories
+export WINEPATH="$(find /opt -name bin -type d | sed 's/^/Z:/' | paste -sd ";" -);Z:/opt/Tools/Ninja"
+# Disable Wine debug
+export WINEDEBUG="-all"
+# Use tmp directory for Wine files
 export WINEPREFIX="/tmp/wine-$(whoami)"
 wine /opt/Tools/mingw${MINGW_VERSION}_64/bin/mingw32-make.exe "\$@"
 EOF
