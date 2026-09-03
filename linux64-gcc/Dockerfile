@@ -12,8 +12,11 @@ RUN apt-get update \
 
 # Install aqt
 ENV PIPX_BIN_DIR=/pipx
+ENV SETUPTOOLS_SCM_PRETEND_VERSION_FOR_AQTINSTALL=3.3.0
 
-RUN pipx install aqtinstall
+COPY ./aqtinstall /aqtinstall
+
+RUN pipx install /aqtinstall
 
 ENV PATH="$PATH:/pipx"
 
