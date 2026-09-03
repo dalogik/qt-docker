@@ -28,11 +28,12 @@ version.
 is used to download tools, so the MinGW version must match the format used by
 `aqt`.
 
-Run the following command from the `linux64-gcc` directory:
+Run the following command from the repository root:
 
 ```bash
 docker buildx build \
   --build-arg QT_VERSION=6.10.0 \
+  --file linux64-gcc/Dockerfile \
   . -t <desired tag>
 ```
 
@@ -71,12 +72,13 @@ version and the corresponding MinGW version.
 is used to download tools, so the MinGW version must match the format used by
 `aqt`.
 
-Run the following command from the `win64-mingw` directory:
+Run the following command from the repository root:
 
 ```bash
 docker buildx build \
   --build-arg QT_VERSION=6.10.0 \
   --build-arg MINGW_VERSION=1310 \
+  --file win64-mingw/Dockerfile \
   . -t <desired tag>
 ```
 

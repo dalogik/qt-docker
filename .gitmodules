@@ -1,0 +1,4 @@
+[submodule "aqtinstall"]
+	path = aqtinstall
+	url = https://github.com/miurahr/aqtinstall
+	branch = master
