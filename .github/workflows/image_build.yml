@@ -55,4 +55,4 @@ jobs:
           provenance: true
           build-args: |
             QT_VERSION=${{ inputs.qt-version }}
-            ${{ inputs.platform == 'win64-mingw' && 'MINGW_VERSION=inputs.mingw-version' || '' }}
+            ${{ inputs.platform == 'win64-mingw' && format('MINGW_VERSION={0}', inputs.mingw-version) || '' }}
