@@ -12,13 +12,12 @@ RUN apt-get update \
 
 # Install aqt
 ENV PIPX_BIN_DIR=/pipx
+ENV PATH="$PATH:/pipx"
 ENV SETUPTOOLS_SCM_PRETEND_VERSION_FOR_AQTINSTALL=3.3.0
 
 COPY ./aqtinstall /aqtinstall
 
 RUN pipx install /aqtinstall
-
-ENV PATH="$PATH:/pipx"
 
 # Install QT with all modules except debug_info
 RUN export ALL_MODULES=$(aqt list-qt linux desktop --modules ${QT_VERSION} linux_gcc_64 | tr ' ' '\n' | grep -v "debug_info" | paste -sd " " -) \
