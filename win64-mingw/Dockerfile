@@ -82,7 +82,7 @@ export WINEPATH="$(find /opt -name bin -type d | sed 's/^/Z:/' | paste -sd ";" -
 export WINEDEBUG="-all"
 # Use tmp directory for Wine files
 export WINEPREFIX="/tmp/wine-$(whoami)"
-wine /opt/qt/${QT_VERSION}/mingw_64/bin/qt-cmake.exe "\$@"
+wine cmd /c qt-cmake "\$@"
 EOF
 
 # Add windeployqt wrapper
