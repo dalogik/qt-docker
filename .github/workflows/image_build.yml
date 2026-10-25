@@ -46,7 +46,7 @@ jobs:
         run: echo "publish=${{ env.ORG_NAME }}/${{ env.IMG_NAME }}:qt${{ inputs.qt-version }}-${{ inputs.platform }}-${{ steps.date.outputs.yymmdd }}-gh" >> "$GITHUB_OUTPUT"
 
       - name: Log in to Docker Hub
-        if: ${{ inputs.push-image == 'true' }}
+        if: ${{ inputs.push-image }}
         uses: docker/login-action@v4
         with:
           username: ${{ vars.DOCKER_USERNAME }}
@@ -76,7 +76,7 @@ jobs:
             bash -c "test/run.sh"
 
       - name: Build and push Docker image with Qt${{ inputs.qt-version }} for ${{ inputs.platform }}
-        if: ${{ inputs.push-image == 'true' }}
+        if: ${{ inputs.push-image }}
         uses: docker/build-push-action@v7
         with:
           file: ${{ inputs.platform }}/Dockerfile
